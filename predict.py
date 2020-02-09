@@ -17,14 +17,14 @@ def evaluate(x, files, classes, model, device):
                 img = img.unsqueeze(0).to(device)
                 output = model(img)
                 res = torch.argmax(output, dim=1).to(torch.device("cpu")).numpy().tolist()[0]
-                f.write(f"{res}\n")
+                f.write(f"{res + 1}\n")
                 modelName = classes[res]
 
                 if not os.path.exists(os.path.join('result', modelName)):
                     os.makedirs(os.path.join('result', modelName))
                 
                 shutil.copy(
-                    os.path.join(datasetRoot, "test", aFile)
+                    os.path.join(datasetRoot, "test", aFile),
                     os.path.join('result', modelName, aFile)
                 )
         

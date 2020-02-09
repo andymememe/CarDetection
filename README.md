@@ -11,3 +11,7 @@ Car Model detection models finetuned from a pretrained ResNet50 model. Using Pyt
 * I finetuned the pretrained model with a new FC layer for the last layer of the model.
 * 10 Epoch, batch number is 32
 * I used a RTX2080 GPU (8 GB)
+
+## Result
+* Testing with official test set.
+* Accuracy: 80.79 %
