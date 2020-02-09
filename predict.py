@@ -7,22 +7,26 @@ import torchvision.models as models
 import os
 import shutil
 
+datasetRoot = "../../Reference/Dataset/Car"
+
 def evaluate(x, files, classes, model, device):
     model.eval()
     with torch.no_grad():
-        for img, aFile in zip(x, files):
-            img = img.unsqueeze(0).to(device)
-            output = model(img)
-            res = torch.argmax(output, dim=1).to(torch.device("cpu")).numpy().tolist()[0]
-            modelName = classes[res]
+        with open('result/test_result.txt', 'w') as f:
+            for img, aFile in zip(x, files):
+                img = img.unsqueeze(0).to(device)
+                output = model(img)
+                res = torch.argmax(output, dim=1).to(torch.device("cpu")).numpy().tolist()[0]
+                f.write(f"{res}\n")
+                modelName = classes[res]
 
-            if not os.path.exists(os.path.join('result', modelName)):
-                os.makedirs(os.path.join('result', modelName))
-            
-            shutil.copy(
-                "../../Reference/Dataset/Car/test/" + aFile,
-                os.path.join('result', modelName, aFile)
-            )
+                if not os.path.exists(os.path.join('result', modelName)):
+                    os.makedirs(os.path.join('result', modelName))
+                
+                shutil.copy(
+                    os.path.join(datasetRoot, "test", aFile)
+                    os.path.join('result', modelName, aFile)
+                )
         
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
@@ -44,7 +48,6 @@ model.load_state_dict(torch.load('model/car_detection.model'))
 model.to(device)
 
 print('Loading data...')
-datasetRoot = "../../Reference/Dataset/Car"
 classes = []
 with open(os.path.join(datasetRoot, "meta", "cars_meta.txt"), 'r') as f:
     for line in f:
